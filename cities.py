@@ -41,7 +41,7 @@ class City(db.Model):
     population = db.Column(db.Integer, unique=False)
 
     def __repr__(self):
-        return self.name + ':' + self.population
+        return self.name + ':' + str(self.population)
 
 
 class AddCityForm(FlaskForm):
