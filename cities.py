@@ -15,7 +15,7 @@
 # To delete tables+data:  db.drop_all() 
 
 import os
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_wtf import FlaskForm
@@ -51,6 +51,11 @@ class City(db.Model):
 class AddCityForm(FlaskForm):
     name = StringField('City name: ', validators=[DataRequired()])
     population = StringField('Population: ', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+class DeleteCityForm(FlaskForm):
+    city = StringField('City name: ', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 
@@ -103,3 +108,24 @@ def find_city():
             city_population = city_record.population
     return render_template('lookup.html', form=form,
                            name=city_name, population=city_population)
+
+
+@app.route('/all')
+def show_all_cities():
+    cities = City.query.all()
+    return render_template('all_cities.html', cities=cities)
+
+
+@app.route('/remove_city', methods=['GET', 'POST'])
+def remove_city():
+    form = DeleteCityForm()
+    if form.validate_on_submit():
+        city = City.query.filter_by(name=form.city.data)
+        if city.first():
+            flash(f"Deleted record for {form.city.data}.")
+            city.delete()
+            db.session.commit()
+        else:
+            flash(f"Sorry, there was no record for {form.city.data} to delete!")
+    return render_template('delete_city.html', form=form)
+

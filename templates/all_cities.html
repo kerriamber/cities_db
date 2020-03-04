@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %} City List {% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h2>City List</h2>
+    </div>
+    {% if cities %}
+        <table class="table-bordered table table-striped table-responsive table-condensed">
+            <thead>
+            <tr>
+                <th>City</th>
+                <th>Population</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for city in cities %}
+                <tr>
+                    <td>{{ city.name }}</td>
+                    <td>{{ city.population }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>There are no cities in the database!</p>
+    {% endif %}
+{% endblock %}
