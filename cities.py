@@ -26,14 +26,15 @@ from flask_sqlalchemy import SQLAlchemy
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'hard to guess string'
-app.config['SQLALCHEMY_DATABASE_URI'] =\
+app.config['SECRET_KEY'] = os.urandom(32)
+app.config['SQLALCHEMY_DATABASE_URI'] = \
     'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 db = SQLAlchemy(app)
+
 
 # Database model defining a single table cities that contains
 # city name and population. 
@@ -52,21 +53,26 @@ class AddCityForm(FlaskForm):
     population = StringField('Population: ', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+
 class LookupForm(FlaskForm):
     name = StringField('City name: ', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
+
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
 
+
 @app.route('/')
 def index():
     return render_template('home.html')
+
 
 @app.route('/add_city', methods=['GET', 'POST'])
 def add_city():
@@ -81,19 +87,19 @@ def add_city():
             db.session.commit()
         form.name.data = ""
         form.population.data = ""
-    return render_template('index.html', form=form) 
+    return render_template('index.html', form=form)
+
 
 @app.route('/lookup_city', methods=['GET', 'POST'])
 def find_city():
     form = LookupForm()
     city_name = None
-    city_population = None 
+    city_population = None
     if form.validate_on_submit():
         city_record = City.query.filter_by(name=form.name.data).first()
         form.name.data = ""
         if city_record:
             city_name = city_record.name
             city_population = city_record.population
-    return render_template('lookup.html', form = form, 
-                           name = city_name, population = city_population)
-
+    return render_template('lookup.html', form=form,
+                           name=city_name, population=city_population)
