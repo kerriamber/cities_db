@@ -6,7 +6,10 @@
 # SQLAlchemy: pip3 install flask-sqlalchemy
 #
 # Then create the tables in SQLite. DO THIS BEFORE RUNNING APP.
-# Run SQLite in shell mode:  python3 -m flask shell
+# Create FLASK_APP and FLASK_DEBUG:
+# export FLASK_APP=cities.py
+# export FLASK_DEBUG=1
+# Run Flask in shell mode:  python3 -m flask shell
 # At the shell, type:     from cities import db
 # And then:               db.create_all()
 # To delete tables+data:  db.drop_all() 
