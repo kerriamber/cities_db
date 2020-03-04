@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}City population{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Add city record to database.</h1>
+</div>
+{{ wtf.quick_form(form) }}
+{% endblock %}
